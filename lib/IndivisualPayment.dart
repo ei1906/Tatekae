@@ -4,17 +4,7 @@ class IndividualPayment {
   String name;
 
   /* constructor */
-  IndividualPayment() {
-    this.now_payment = 0;
-    this.must_payment = 0;
-    this.name = "";
-  }
-
-  IndividualPayment(String name, int now_pay, int must_pay) {
-    this.name = name;
-    this.now_payment = now_pay;
-    this.must_payment = must_pay;
-  }
+  IndividualPayment(this.name, this.now_payment, this.must_payment);
 
   /* getter */
   int get_now_payment() {
