@@ -36,6 +36,13 @@ class IndividualPayment {
   }
 
   /* others */
+  bool is_null_data() {
+    if (name == '') {
+      return true;
+    }
+    return false;
+  }
+
   int add_payment(int add) {
     int now = get_now_payment();
     set_now_payment(now + add);
