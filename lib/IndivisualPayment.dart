@@ -7,51 +7,56 @@ class IndividualPayment {
   IndividualPayment(this.name, this.now_payment, this.must_payment);
 
   /* getter */
-  int get_now_payment() {
-    return this.now_payment;
+  int getNowPayment() {
+    return now_payment;
   }
 
-  int get_must_payment() {
-    return this.must_payment;
+  int getMustPayment() {
+    return must_payment;
   }
 
-  String get_name() {
-    return this.name;
+  String getName() {
+    return name;
   }
 
   /* setter */
-  void set_now_payment(int payment) {
-    this.now_payment = payment;
+  void setNowPayment(int payment) {
+    now_payment = payment;
     return;
   }
 
-  void set_must_payment(int payment) {
-    this.must_payment = payment;
+  void setMustPayment(int payment) {
+    must_payment = payment;
     return;
   }
 
-  void set_name(String name) {
-    this.name = name;
+  void setName(String name) {
+    name = name;
     return;
   }
 
   /* others */
-  bool is_null_data() {
+  bool isNullData() {
     if (name == '') {
       return true;
     }
     return false;
   }
 
-  int add_payment(int add) {
-    int now = get_now_payment();
-    set_now_payment(now + add);
-    return get_now_payment();
+  int addPayment(int add) {
+    int now = getNowPayment();
+    setNowPayment(now + add);
+    return getNowPayment();
   }
 
-  int sub_payment(int sub) {
-    int now = get_now_payment();
-    set_now_payment(now - sub);
-    return get_now_payment();
+  int subPayment(int sub) {
+    int now = getNowPayment();
+    setNowPayment(now - sub);
+    return getNowPayment();
+  }
+
+  void printPayment() {
+    print("name: ${name}, now: ￥${now_payment}, must: ￥${must_payment}");
+    return;
   }
 }
