@@ -79,10 +79,39 @@ class EntryScreen extends StatelessWidget {
     final Map args = ModalRoute.of(context)!.settings.arguments as Map;
 
     int num = int.parse(args['num']);
-    List<Widget> paymentWidgets = [];
+    List<Widget> paymentWidgets = getFormList(num);
 
+    paymentWidgets.add(
+      ElevatedButton(
+        onPressed: () {
+          Navigator.pushNamed(
+            context,
+            '/settlement',
+            arguments: {},
+          );
+        },
+        child: Text('精算開始'),
+      ),
+    );
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Entry'),
+      ),
+      body: SingleChildScrollView(
+        // スクロール可能にする
+        padding: EdgeInsets.all(20),
+        child: Column(
+          children: paymentWidgets,
+        ),
+      ),
+    );
+  }
+
+  List<Widget> getFormList(int num) {
+    List<Widget> ret = [];
     for (int i = 0; i < num; i++) {
-      paymentWidgets.add(
+      ret.add(
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly, // 要素間のスペースを均等に
           children: [
@@ -98,21 +127,9 @@ class EntryScreen extends StatelessWidget {
           ],
         ),
       );
-      paymentWidgets.add(SizedBox(height: 20)); // 各Rowの間にスペースを追加
+      ret.add(SizedBox(height: 20)); // 各Rowの間にスペースを追加
     }
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('結果'),
-      ),
-      body: SingleChildScrollView(
-        // スクロール可能にする
-        padding: EdgeInsets.all(20),
-        child: Column(
-          children: paymentWidgets,
-        ),
-      ),
-    );
+    return ret;
   }
 
   Widget getTextForm(String labelText) {
@@ -126,5 +143,14 @@ class EntryScreen extends StatelessWidget {
 
 class SettlementScreen extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {}
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Settlement'),
+      ),
+      body: SingleChildScrollView(
+        child: Text('Hello'),
+      ),
+    );
+  }
 }
