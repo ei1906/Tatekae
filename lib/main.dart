@@ -23,8 +23,10 @@ class MyApp extends StatelessWidget {
 }
 
 class TitleScreen extends StatelessWidget {
-  final TextEditingController numController = TextEditingController();
-  final TextEditingController amountController = TextEditingController();
+  // 人数headcntのテキストフィールドを管理
+  final TextEditingController headcntController = TextEditingController();
+  // 立替額のテキストフィールド
+  final TextEditingController paymentController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -35,23 +37,11 @@ class TitleScreen extends StatelessWidget {
           children: <Widget>[
             Container(
               width: 200,
-              child: TextFormField(
-                controller: numController,
-                decoration: InputDecoration(
-                  labelText: '人数',
-                ),
-              ),
+              child: getTextField('人数', headcntController),
             ),
             SizedBox(height: 20),
             Container(
-              width: 200,
-              child: TextFormField(
-                controller: amountController,
-                decoration: InputDecoration(
-                  labelText: '立替金額',
-                ),
-              ),
-            ),
+                width: 200, child: getTextField('立替金額', paymentController)),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
@@ -59,8 +49,8 @@ class TitleScreen extends StatelessWidget {
                   context,
                   '/entry',
                   arguments: {
-                    'num': numController.text,
-                    'amount': amountController.text,
+                    'num': headcntController.text,
+                    'amount': paymentController.text,
                   },
                 );
               },
@@ -70,6 +60,14 @@ class TitleScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget getTextField(String text, TextEditingController ctr) {
+    return TextFormField(
+        controller: ctr,
+        decoration: InputDecoration(
+          labelText: text,
+        ));
   }
 }
 
