@@ -45,14 +45,18 @@ class TitleScreen extends StatelessWidget {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(
-                  context,
-                  '/entry',
-                  arguments: {
-                    'num': headcntController.text,
-                    'amount': paymentController.text,
-                  },
-                );
+                // 人数と立替金額が空でなかったときだけonPressedに属性を付与
+                if (headcntController.text.isNotEmpty &&
+                    paymentController.text.isNotEmpty) {
+                  Navigator.pushNamed(
+                    context,
+                    '/entry',
+                    arguments: {
+                      'num': headcntController.text,
+                      'amount': paymentController.text,
+                    },
+                  );
+                }
               },
               child: Text('精算開始'),
             ),
