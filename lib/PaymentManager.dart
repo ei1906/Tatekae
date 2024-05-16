@@ -12,6 +12,14 @@ class PaymentManager {
     return member_num;
   }
 
+  List<String> getMemberName() {
+    List<String> ret = [];
+    payment_status.forEach((key, value) {
+      ret.add(key);
+    });
+    return ret;
+  }
+
   Map<String, IndividualPayment> getAllPaymentStatus() {
     return payment_status;
   }
