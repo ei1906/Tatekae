@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-//import 'package:tatekae/IndivisualPayment.dart';
+import 'package:tatekae/IndivisualPayment.dart';
 import 'package:tatekae/PaymentManager.dart';
 
-PaymentManager pm;
+// 共有資源
+PaymentManager pm = PaymentManager();
 
 void main() {
-  pm = PaymentManager();
   runApp(MyApp());
 }
 
@@ -97,12 +97,42 @@ class EntryScreen extends StatelessWidget {
     int headCount = int.parse(args['headCount']);
     // テキストフィールドを人数分用意
     List<Widget> paymentWidgets = getFormList(headCount);
+    // 立替総額を取得
+    int totalPayment = int.parse(args['payment']);
 
     paymentWidgets.add(
       ElevatedButton(
         onPressed: () {
           // pmに登録していく
-          for (int i = 0; i < headCount; i++) {}
+          String name;
+          int nowP, finalP;
+          for (int i = 0; i < headCount; i++) {
+            // 名前を取得
+            if (nameController[i].text.isEmpty) {
+              // 名前が入力されてない場合は連番
+              name = "Person ${i + 1}";
+            } else {
+              name = nameController[i].text;
+            }
+            // （現）立替金額を取得
+            if (nowPaymentController[i].text.isEmpty) {
+              if (i == 0)
+                nowP = totalPayment;
+              else
+                nowP = 0;
+            } else {
+              nowP = int.parse(nowPaymentController[i].text);
+            }
+            // (最終)立替金額を取得
+            if (finalPaymentController[i].text.isEmpty) {
+              // 全員均等に支払い(小数点切り上げ)
+              finalP = ((totalPayment + headCount - 1) / headCount).ceil();
+            } else {
+              finalP = int.parse(finalPaymentController[i].text);
+            }
+            pm.setIndivisualPayment(name, nowP, finalP);
+          }
+
           // 遷移
           Navigator.pushNamed(
             context,
@@ -173,7 +203,7 @@ class SettlementScreen extends StatelessWidget {
         title: Text('Settlement'),
       ),
       body: SingleChildScrollView(
-        child: Text('Hello'),
+        child: Text("${pm.getIndivisualPaymentStatus('Person 1').now_payment}"),
       ),
     );
   }
