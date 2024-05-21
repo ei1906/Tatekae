@@ -67,17 +67,9 @@ class PaymentManager {
     }
     return;
   }
-}
 
-void main() {
-  PaymentManager test = PaymentManager();
-  List<String> names = ["A", "B", "C", "D", "E"];
-  List<int> now_pays = [9000, 0, 0, 0, 0],
-      must_pays = [2000, 1500, 1500, 2500, 1500];
-  test.setAllPayment(names, now_pays, must_pays);
-  print(test.getMemberNum());
-  test.printPaymentStatus();
-  test.movePay("B", "A", 1500);
-  print("");
-  test.printPaymentStatus();
+  void clearPayment() {
+    member_num = 0;
+    payment_status.clear();
+  }
 }

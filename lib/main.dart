@@ -102,6 +102,8 @@ class EntryScreen extends StatelessWidget {
     paymentWidgets.add(
       ElevatedButton(
         onPressed: () {
+          // pmをリセット
+          pm.clearPayment();
           // pmに登録していく
           String name;
           int nowP, finalP;
