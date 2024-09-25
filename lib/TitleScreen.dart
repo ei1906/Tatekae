@@ -71,15 +71,18 @@ class _TitleFormsState extends State<TitleForms> {
   }
 
   Widget getHumanIcons() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: List.generate(
-        member, // memberの数だけアイコンを生成
-        (index) => Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 4.0),
-          child: const Icon(Icons.person),
-        ),
-      ),
-    );
+    return SizedBox(
+        width: 200,
+        child: GridView.count(
+          crossAxisCount: 5, // 1行あたり5個表示
+          shrinkWrap: true, // GridViewが無限に広がらないように
+          physics: const NeverScrollableScrollPhysics(), // 親のスクロールに任せる
+          crossAxisSpacing: 8.0, // アイコン同士の横方向のスペース
+          mainAxisSpacing: 8.0, // アイコン同士の縦方向のスペース
+          children: List.generate(
+            member, // memberの数だけアイコンを生成
+            (index) => const Icon(Icons.person),
+          ),
+        ));
   }
 }
