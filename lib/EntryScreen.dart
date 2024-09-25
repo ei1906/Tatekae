@@ -15,11 +15,11 @@ class EntryScreen extends StatelessWidget {
     final Map args = ModalRoute.of(context)!.settings.arguments as Map;
 
     // 前画面から渡された headCount を取得
-    int headCount = int.parse(args['headCount']);
+    int headCount = args['headCount'];
     // テキストフィールドを人数分用意
     List<Widget> paymentWidgets = getFormList(headCount);
     // 立替総額を取得
-    int totalPayment = int.parse(args['payment']);
+    int totalPayment = args['payment'];
 
     paymentWidgets.add(
       ElevatedButton(

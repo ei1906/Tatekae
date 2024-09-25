@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:tatekae/Space.dart';
 //import 'package:tatekae/main.dart';
 
@@ -40,8 +41,9 @@ class TitleForms extends StatefulWidget {
 
 class _TitleFormsState extends State<TitleForms> {
   // 状態を保持するグローバル変数
-  int member = 2;
-  List<int> select = [2, 3, 4, 5, 6, 7, 8, 9, 10];
+  int headCount = 2;
+  int payment = 0;
+  final List<int> select = [2, 3, 4, 5, 6, 7, 8, 9, 10];
 
   @override
   Widget build(BuildContext context) {
@@ -57,16 +59,39 @@ class _TitleFormsState extends State<TitleForms> {
   }
 
   Widget getMemberSelectButton() {
+    return Row(
+      children: [getSelectMenu(), getButton()],
+    );
+  }
+
+  Widget getSelectMenu() {
     return DropdownMenu<int>(
       initialSelection: select.first,
       onSelected: (int? value) {
         setState(() {
-          member = value!;
+          // memberを選ばれた値へ変更
+          headCount = value!;
         });
       },
       dropdownMenuEntries: select.map<DropdownMenuEntry<int>>((int value) {
         return DropdownMenuEntry(value: value, label: value.toString());
       }).toList(),
+    );
+  }
+
+  Widget getButton() {
+    return ElevatedButton(
+      onPressed: () {
+        Navigator.pushNamed(
+          context,
+          '/entry',
+          arguments: {
+            "headCount": headCount,
+            "payment": payment,
+          },
+        );
+      },
+      child: const Text("ここをクリック"),
     );
   }
 
@@ -80,7 +105,7 @@ class _TitleFormsState extends State<TitleForms> {
           crossAxisSpacing: 8.0, // アイコン同士の横方向のスペース
           mainAxisSpacing: 8.0, // アイコン同士の縦方向のスペース
           children: List.generate(
-            member, // memberの数だけアイコンを生成
+            headCount, // memberの数だけアイコンを生成
             (index) => const Icon(Icons.person),
           ),
         ));
