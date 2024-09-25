@@ -71,6 +71,15 @@ class _TitleFormsState extends State<TitleForms> {
   }
 
   Widget getHumanIcons() {
-    return Icon(Icons.person);
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(
+        member, // memberの数だけアイコンを生成
+        (index) => Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+          child: const Icon(Icons.person),
+        ),
+      ),
+    );
   }
 }
