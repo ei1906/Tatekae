@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/services.dart';
 import 'package:tatekae/Space.dart';
 //import 'package:tatekae/main.dart';
 
@@ -59,8 +59,18 @@ class _TitleFormsState extends State<TitleForms> {
   }
 
   Widget getMemberSelectButton() {
-    return Row(
-      children: [getSelectMenu(), getButton()],
+    return Column(
+      children: [
+        Row(
+          children: [
+            getSelectMenu(),
+            const Text("人で"),
+            getTextField(),
+            const Text("円精算する")
+          ],
+        ),
+        getButton()
+      ],
     );
   }
 
@@ -69,7 +79,7 @@ class _TitleFormsState extends State<TitleForms> {
       initialSelection: select.first,
       onSelected: (int? value) {
         setState(() {
-          // memberを選ばれた値へ変更
+          // headCountを選ばれた値へ変更
           headCount = value!;
         });
       },
@@ -77,6 +87,24 @@ class _TitleFormsState extends State<TitleForms> {
         return DropdownMenuEntry(value: value, label: value.toString());
       }).toList(),
     );
+  }
+
+  Widget getTextField() {
+    return SizedBox(
+        width: 80,
+        child: TextField(
+          maxLength: 7,
+          keyboardType: TextInputType.number, // 数字用キーボードを表示
+          inputFormatters: <TextInputFormatter>[
+            FilteringTextInputFormatter.digitsOnly, // 数字のみを許可
+          ],
+          onChanged: (value) {
+            // 空の場合のエラーハンドリング
+            if (value.isNotEmpty) {
+              payment = int.parse(value);
+            }
+          },
+        ));
   }
 
   Widget getButton() {
