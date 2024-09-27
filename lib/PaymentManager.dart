@@ -1,75 +1,91 @@
-import 'package:tatekae/IndivisualPayment.dart';
+import 'package:tatekae/IndividualPayment.dart';
+import 'package:tatekae/main.dart';
 
 class PaymentManager {
   /* メンバ変数 */
-  int member_num = 0;
-  Map<String, IndividualPayment> payment_status = {};
+  int _headCount = 0;
+  List<IndividualPayment> _paymentStatus = [];
 
   /* constructor */
+  void init(int cnt, int payment) {
+    _headCount = cnt;
+    // リストの先頭は立替者
+    _paymentStatus.add(IndividualPayment("立替者", payment, payment));
+    for (int i = 1; i < _headCount; i++) {}
+  }
 
   /* getter */
   int getMemberNum() {
-    return member_num;
+    return _headCount;
   }
 
   List<String> getMemberName() {
     List<String> ret = [];
-    payment_status.forEach((key, value) {
-      ret.add(key);
-    });
+    for (int i = 0; i < _headCount; i++) {
+      ret.add(_paymentStatus[i].getName());
+    }
     return ret;
   }
 
-  Map<String, IndividualPayment> getAllPaymentStatus() {
-    return payment_status;
+  List<IndividualPayment> getAllPaymentStatus() {
+    return _paymentStatus;
   }
 
   IndividualPayment getIndivisualPaymentStatus(String name) {
     if (!isRegistered(name)) {
       // nameが登録されていない
-      return IndividualPayment('', 0, 0);
+      return IndividualPayment('', 0, 0); // null代わり
     } else {
-      return payment_status[name]!;
+      return _paymentStatus[_getIndexFromName(name)];
     }
   }
 
   /* setter */
-  void setIndivisualPayment(String name, int now_pay, int must_pay) {
-    payment_status[name] = IndividualPayment(name, now_pay, must_pay);
-    member_num++;
-    return;
-  }
-
-  void setAllPayment(
-      List<String> names, List<int> now_pays, List<int> must_pays) {
-    int size = names.length;
-    for (int i = 0; i < size; i++) {
-      setIndivisualPayment(names[i], now_pays[i], must_pays[i]);
+  bool addIndivisualPayment(String name, int nowPay, int mustPay) {
+    if (_headCount < MAX_MEMBER) {
+      _paymentStatus.add(IndividualPayment(name, nowPay, mustPay));
+      _headCount++;
+      return true;
+    } else {
+      return false;
     }
-    return;
   }
 
   /* others */
   bool isRegistered(String name) {
-    return payment_status.containsKey(name);
+    if (_getIndexFromName(name) != -1) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   void printPaymentStatus() {
-    payment_status.forEach((key, value) {
-      value.printPayment();
-    });
+    for (int i = 0; i < _headCount; i++) {
+      _paymentStatus[i].printPayment();
+    }
+    return;
   }
 
   void movePay(String from, String to, int payment) {
     if (isRegistered(from) && isRegistered(to)) {
-      payment_status[from]!.addPayment(payment);
-      payment_status[to]!.subPayment(payment);
+      _paymentStatus[_getIndexFromName(from)].addPayment(payment);
+      _paymentStatus[_getIndexFromName(to)].subPayment(payment);
     }
     return;
   }
 
   void clearPayment() {
-    member_num = 0;
-    payment_status.clear();
+    _headCount = 0;
+    _paymentStatus = [];
+  }
+
+  int _getIndexFromName(String name) {
+    for (int i = 0; i < _headCount; i++) {
+      if (_paymentStatus[i].getName() == name) {
+        return i;
+      }
+    }
+    return -1;
   }
 }
