@@ -8,6 +8,8 @@ class PaymentManager {
 
   /* constructor */
   void init(int cnt, int payment) {
+    clearPayment();
+
     _headCount = cnt;
     // リストの先頭は立替者
     _paymentStatus.add(IndividualPayment("立替者", payment, payment));
