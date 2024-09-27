@@ -6,6 +6,7 @@ import 'package:tatekae/SettlementScreen.dart';
 
 // 共有資源
 PaymentManager pm = PaymentManager();
+const MAX_MEMBER = 10;
 
 void main() {
   runApp(MyApp());
