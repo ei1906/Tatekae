@@ -11,7 +11,12 @@ class PaymentManager {
     _headCount = cnt;
     // リストの先頭は立替者
     _paymentStatus.add(IndividualPayment("立替者", payment, payment));
-    for (int i = 1; i < _headCount; i++) {}
+    // 他のメンバーは 精算者A, B, ...
+    int index = 'A'.codeUnitAt(0);
+    for (int i = 0; i < _headCount - 1; i++) {
+      _paymentStatus
+          .add(IndividualPayment("精算者" + String.fromCharCode(index + i), 0, 0));
+    }
   }
 
   /* getter */
