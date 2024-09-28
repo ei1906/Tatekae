@@ -2,60 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:tatekae/main.dart';
 
 class EntryScreen extends StatelessWidget {
-  // 名前一覧のテキストフィールドを管理
-  final List<TextEditingController> nameController = [];
-  // (現)立替金額のテキストフィールド
-  final List<TextEditingController> nowPaymentController = [];
-  // (最終)立替金額のテキストフィールド
-  final List<TextEditingController> finalPaymentController = [];
-
   @override
   Widget build(BuildContext context) {
     // 遷移前の画面から渡されたものを args に格納
     final Map args = ModalRoute.of(context)!.settings.arguments as Map;
-
     // 前画面から渡された headCount を取得
     int headCount = args['headCount'];
-    // テキストフィールドを人数分用意
-    List<Widget> paymentWidgets = getFormList(headCount);
     // 立替総額を取得
     int totalPayment = args['payment'];
 
+    // pmを初期化
+    pm.init(headCount, totalPayment);
+
+    // テキストフィールドを人数分用意
+    List<Widget> paymentWidgets = getFormList();
     paymentWidgets.add(
       ElevatedButton(
         onPressed: () {
-          // pmをリセット
-          pm.clearPayment();
-          // pmに登録していく
-          String name;
-          int nowP, finalP;
-          for (int i = 0; i < headCount; i++) {
-            // 名前を取得
-            if (nameController[i].text.isEmpty) {
-              // 名前が入力されてない場合は連番
-              name = "Person ${i + 1}";
-            } else {
-              name = nameController[i].text;
-            }
-            // （現）立替金額を取得
-            if (nowPaymentController[i].text.isEmpty) {
-              if (i == 0)
-                nowP = totalPayment;
-              else
-                nowP = 0;
-            } else {
-              nowP = int.parse(nowPaymentController[i].text);
-            }
-            // (最終)立替金額を取得
-            if (finalPaymentController[i].text.isEmpty) {
-              // 全員均等に支払い(小数点切り上げ)
-              finalP = ((totalPayment + headCount - 1) / headCount).ceil();
-            } else {
-              finalP = int.parse(finalPaymentController[i].text);
-            }
-            pm.setIndivisualPayment(name, nowP, finalP);
-          }
-
           // 遷移
           Navigator.pushNamed(
             context,
@@ -81,26 +44,15 @@ class EntryScreen extends StatelessWidget {
     );
   }
 
-  List<Widget> getFormList(int num) {
+  List<Widget> getFormList() {
     List<Widget> ret = [];
-    for (int i = 0; i < num; i++) {
-      nameController.add(TextEditingController());
-      nowPaymentController.add(TextEditingController());
-      finalPaymentController.add(TextEditingController());
+    for (int i = 0; i < pm.getMemberNum(); i++) {
       ret.add(
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly, // 要素間のスペースを均等に
-          children: [
-            Expanded(
-              child: getTextForm('名前 ${i + 1}', nameController[i]),
-            ),
-            Expanded(
-              child: getTextForm('現在の支払額', nowPaymentController[i]),
-            ),
-            Expanded(
-              child: getTextForm('最終的な支払額', finalPaymentController[i]),
-            ),
-          ],
+        TextFormField(
+          initialValue: pm.getIndivisualPaymentStatusByIndex(i).getName(),
+          onChanged: (value) {
+            pm.getIndivisualPaymentStatusByIndex(i).setName(value);
+          },
         ),
       );
       ret.add(SizedBox(height: 20)); // 各Rowの間にスペースを追加
