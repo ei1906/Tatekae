@@ -38,12 +38,20 @@ class PaymentManager {
     return _paymentStatus;
   }
 
-  IndividualPayment getIndivisualPaymentStatus(String name) {
+  IndividualPayment getIndivisualPaymentStatusByName(String name) {
     if (!isRegistered(name)) {
       // nameが登録されていない
       return IndividualPayment('', 0, 0); // null代わり
     } else {
       return _paymentStatus[_getIndexFromName(name)];
+    }
+  }
+
+  IndividualPayment getIndivisualPaymentStatusByIndex(int index) {
+    if (index < _headCount) {
+      return _paymentStatus[index];
+    } else {
+      return IndividualPayment('', 0, 0); // null代わり
     }
   }
 
