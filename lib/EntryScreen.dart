@@ -48,11 +48,49 @@ class EntryScreen extends StatelessWidget {
     List<Widget> ret = [];
     for (int i = 0; i < pm.getMemberNum(); i++) {
       ret.add(
-        TextFormField(
-          initialValue: pm.getIndivisualPaymentStatusByIndex(i).getName(),
-          onChanged: (value) {
-            pm.getIndivisualPaymentStatusByIndex(i).setName(value);
-          },
+        Row(
+          children: [
+            // 名前入力フォーム
+            SizedBox(
+              width: 200,
+              child: TextFormField(
+                initialValue: pm.getIndivisualPaymentStatusByIndex(i).getName(),
+                onChanged: (value) {
+                  pm.getIndivisualPaymentStatusByIndex(i).setName(value);
+                },
+              ),
+            ),
+            // 現在の支払額入力フォーム
+            SizedBox(
+              width: 200,
+              child: TextFormField(
+                initialValue: pm
+                    .getIndivisualPaymentStatusByIndex(i)
+                    .getNowPayment()
+                    .toString(),
+                onChanged: (value) {
+                  pm
+                      .getIndivisualPaymentStatusByIndex(i)
+                      .setNowPayment(int.parse(value));
+                },
+              ),
+            ),
+            // 最終支払額入力フォーム
+            SizedBox(
+              width: 200,
+              child: TextFormField(
+                initialValue: pm
+                    .getIndivisualPaymentStatusByIndex(i)
+                    .getMustPayment()
+                    .toString(),
+                onChanged: (value) {
+                  pm
+                      .getIndivisualPaymentStatusByIndex(i)
+                      .setMustPayment(int.parse(value));
+                },
+              ),
+            ),
+          ],
         ),
       );
       ret.add(SizedBox(height: 20)); // 各Rowの間にスペースを追加
