@@ -4,24 +4,40 @@ import 'package:tatekae/main.dart';
 class SettlementScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // pmから全員分の名前を取得
-    List<String> name = pm.getMemberName();
-    // プルダウンメニューに初期値をセット
-    final ValueNotifier<String?> sender = ValueNotifier<String?>(name[0]);
-    final ValueNotifier<String?> reciever = ValueNotifier<String?>(name[0]);
-    // 表示するウィジェット
-    List<Widget> child = [];
-    child.add(getPullDownMenu(sender, name));
-    child.add(getPullDownMenu(reciever, name));
     return Scaffold(
       appBar: AppBar(
         title: Text('Settlement'),
       ),
       body: SingleChildScrollView(
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
           child: Column(
-        children: child,
-      )),
+            children: [
+              PaymentForm(),
+              PaymentTable(),
+            ],
+          ),
+        ),
+      ),
     );
+  }
+}
+
+class PaymentForm extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    // pmから全員分の名前を取得
+    List<String> name = pm.getMemberName();
+    // プルダウンメニューに初期値をセット
+    final ValueNotifier<String?> sender = ValueNotifier<String?>(name[0]);
+    final ValueNotifier<String?> reciever = ValueNotifier<String?>(name[0]);
+
+    List<Widget> ret = [];
+    ret.add(getPullDownMenu(sender, name));
+    ret.add(const Text('--->'));
+    ret.add(getPullDownMenu(reciever, name));
+
+    return Row(children: ret);
   }
 
   Widget getPullDownMenu(
@@ -30,7 +46,6 @@ class SettlementScreen extends StatelessWidget {
       valueListenable: selectedItem,
       builder: (context, value, child) {
         return DropdownButton<String?>(
-          hint: Text('Select an item'),
           value: value,
           onChanged: (String? newValue) {
             selectedItem.value = newValue;
@@ -44,5 +59,21 @@ class SettlementScreen extends StatelessWidget {
         );
       },
     );
+  }
+}
+
+class PaymentTable extends StatefulWidget {
+  @override
+  _PaymentTableState createState() => _PaymentTableState();
+}
+
+class _PaymentTableState extends State<PaymentTable> {
+  @override
+  Widget build(BuildContext context) {
+    return getTable();
+  }
+
+  Widget getTable() {
+    return const Text('ここにテーブル');
   }
 }
