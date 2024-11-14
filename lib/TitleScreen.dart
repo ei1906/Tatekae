@@ -7,7 +7,7 @@ class TitleScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
+      body: SingleChildScrollView(
         child: TitleBody(),
       ),
     );
@@ -19,6 +19,7 @@ class TitleBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        const ColumnSpace(h: 100),
         getTitleLogo(),
         getTitleForms(),
       ],
@@ -26,7 +27,7 @@ class TitleBody extends StatelessWidget {
   }
 
   Widget getTitleLogo() {
-    return Text("ここにロゴ");
+    return const Text("ここにロゴ");
   }
 
   Widget getTitleForms() {
