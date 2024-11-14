@@ -37,8 +37,11 @@ class EntryScreen extends StatelessWidget {
       body: SingleChildScrollView(
         // スクロール可能にする
         padding: EdgeInsets.all(20),
-        child: Column(
-          children: paymentWidgets,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Column(
+            children: paymentWidgets,
+          ),
         ),
       ),
     );
