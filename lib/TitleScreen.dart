@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:tatekae/Space.dart';
-//import 'package:tatekae/main.dart';
 
 class TitleScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.blueAccent,
       body: SingleChildScrollView(
         child: TitleBody(),
       ),
@@ -17,21 +16,45 @@ class TitleScreen extends StatelessWidget {
 class TitleBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const ColumnSpace(h: 100),
+        const SizedBox(height: 50),
         getTitleLogo(),
-        getTitleForms(),
+        const SizedBox(height: 30),
+        Container(
+          height: size.height * 0.7,
+          child: getTitleForms(),
+        ),
       ],
     );
   }
 
   Widget getTitleLogo() {
-    return const Text("ここにロゴ");
+    return Column(
+      children: [
+        Image.asset(
+          'assets/logo.png',
+          height: 100,
+        ),
+        const Text(
+          "割り勘レコーダー",
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+      ],
+    );
   }
 
   Widget getTitleForms() {
-    return TitleForms();
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: TitleForms(),
+    );
   }
 }
 
@@ -41,75 +64,94 @@ class TitleForms extends StatefulWidget {
 }
 
 class _TitleFormsState extends State<TitleForms> {
-  // 状態を保持するグローバル変数
   int headCount = 2;
   int payment = 0;
   final List<int> select = [2, 3, 4, 5, 6, 7, 8, 9, 10];
 
   @override
   Widget build(BuildContext context) {
-    return getForms();
-  }
-
-  Widget getForms() {
-    return Column(children: [
-      getMemberSelectButton(),
-      const ColumnSpace(h: 20),
-      getHumanIcons(),
-    ]);
+    return Card(
+      elevation: 8,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 20.0),
+        child: Column(
+          children: [
+            getMemberSelectButton(),
+            const SizedBox(height: 20),
+            getHumanIcons(),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget getMemberSelectButton() {
     return Column(
       children: [
         Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             getSelectMenu(),
+            const SizedBox(width: 8),
             const Text("人で"),
+            const SizedBox(width: 8),
             getTextField(),
+            const SizedBox(width: 8),
             const Text("円精算する")
           ],
         ),
-        getButton()
+        const SizedBox(height: 10),
+        getButton(),
       ],
     );
   }
 
   Widget getSelectMenu() {
-    return DropdownMenu<int>(
-      initialSelection: select.first,
-      onSelected: (int? value) {
+    return DropdownButton<int>(
+      value: headCount,
+      items: select
+          .map((value) => DropdownMenuItem(
+                value: value,
+                child: Text(value.toString()),
+              ))
+          .toList(),
+      onChanged: (value) {
         setState(() {
-          // headCountを選ばれた値へ変更
           headCount = value!;
         });
       },
-      dropdownMenuEntries: select.map<DropdownMenuEntry<int>>((int value) {
-        return DropdownMenuEntry(value: value, label: value.toString());
-      }).toList(),
     );
   }
 
   Widget getTextField() {
     return SizedBox(
-        width: 80,
-        child: TextField(
-          maxLength: 7,
-          keyboardType: TextInputType.number, // 数字用キーボードを表示
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.digitsOnly, // 数字のみを許可
-          ],
-          onChanged: (value) {
-            // 空の場合のエラーハンドリング
-            if (value.isNotEmpty) {
-              payment = int.parse(value);
-            }
-          },
-        ));
+      width: 80,
+      child: TextField(
+        maxLength: 7,
+        keyboardType: TextInputType.number,
+        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+        decoration: InputDecoration(
+          counterText: '',
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+          filled: true,
+          fillColor: Colors.grey[200],
+        ),
+        onChanged: (value) {
+          if (value.isNotEmpty) {
+            payment = int.parse(value);
+          }
+        },
+      ),
+    );
   }
 
   Widget getButton() {
     return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.blueAccent,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      ),
       onPressed: () {
         Navigator.pushNamed(
           context,
@@ -120,23 +162,27 @@ class _TitleFormsState extends State<TitleForms> {
           },
         );
       },
-      child: const Text("ここをクリック"),
+      child: const Text("次へ"),
     );
   }
 
   Widget getHumanIcons() {
     return SizedBox(
-        width: 200,
-        child: GridView.count(
-          crossAxisCount: 5, // 1行あたり5個表示
-          shrinkWrap: true, // GridViewが無限に広がらないように
-          physics: const NeverScrollableScrollPhysics(), // 親のスクロールに任せる
-          crossAxisSpacing: 8.0, // アイコン同士の横方向のスペース
-          mainAxisSpacing: 8.0, // アイコン同士の縦方向のスペース
-          children: List.generate(
-            headCount, // memberの数だけアイコンを生成
-            (index) => const Icon(Icons.person),
+      width: 200,
+      child: GridView.count(
+        crossAxisCount: 5,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        crossAxisSpacing: 8.0,
+        mainAxisSpacing: 8.0,
+        children: List.generate(
+          headCount,
+          (index) => const Icon(
+            Icons.person,
+            color: Colors.blueAccent,
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
