@@ -5,7 +5,7 @@ class TitleScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blueAccent,
+      backgroundColor: const Color(0xE9f5f5f5),
       body: SingleChildScrollView(
         child: TitleBody(),
       ),
@@ -20,32 +20,13 @@ class TitleBody extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const SizedBox(height: 50),
-        getTitleLogo(),
-        const SizedBox(height: 30),
-        Container(
-          height: size.height * 0.7,
+        SizedBox(height: size.height * 0.2),
+        //getTitleLogo(),
+        SizedBox(
+          height: size.height * 0.6,
           child: getTitleForms(),
         ),
-      ],
-    );
-  }
-
-  Widget getTitleLogo() {
-    return Column(
-      children: [
-        Image.asset(
-          'assets/logo.png',
-          height: 100,
-        ),
-        const Text(
-          "割り勘レコーダー",
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
+        SizedBox(height: size.height * 0.2),
       ],
     );
   }
@@ -70,18 +51,40 @@ class _TitleFormsState extends State<TitleForms> {
 
   @override
   Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
     return Card(
-      elevation: 8,
+      elevation: 3,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      color: Colors.white,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 20.0),
         child: Column(
           children: [
-            getMemberSelectButton(),
-            const SizedBox(height: 20),
-            getHumanIcons(),
+            SizedBox(
+              height: size.height * 0.1,
+              child: getTitleLogo(),
+            ),
+            SizedBox(
+              height: size.height * 0.2,
+              child: getMemberSelectButton(),
+            ),
+            SizedBox(
+              height: size.height * 0.2,
+              child: getHumanIcons(),
+            ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget getTitleLogo() {
+    return const Text(
+      "割り勘レコーダー",
+      style: TextStyle(
+        fontSize: 24,
+        fontWeight: FontWeight.bold,
+        color: Colors.black,
       ),
     );
   }
@@ -149,7 +152,7 @@ class _TitleFormsState extends State<TitleForms> {
   Widget getButton() {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: const Color(0xFF34495E), // カラーコードで色#34495Eを指定
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
       onPressed: () {
@@ -162,7 +165,12 @@ class _TitleFormsState extends State<TitleForms> {
           },
         );
       },
-      child: const Text("次へ"),
+      child: const Text(
+        "次へ",
+        style: TextStyle(
+          color: Colors.white,
+        ),
+      ),
     );
   }
 
