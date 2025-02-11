@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:tatekae/main.dart';
 
 class SettlementScreen extends StatelessWidget {
@@ -28,50 +29,56 @@ class SettlementScreen extends StatelessWidget {
 
   Widget getSettlementForms(Size size) {
     return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SizedBox(
-            width: size.width * 0.9,
-            child: Card(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15)),
-              color: Colors.white,
-              child: PaymentForm(),
-            ),
-          ),
-          const SizedBox(height: 10),
-          SizedBox(
-            width: size.width * 0.9,
-            child: Card(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15)),
-              color: Colors.white,
-              child: PaymentTable(),
-            ),
-          ),
-        ],
-      ),
+      child: SettlementBody(),
     );
   }
 }
 
-class PaymentForm extends StatefulWidget {
+class SettlementBody extends StatefulWidget {
   @override
-  _PaymentFormState createState() => _PaymentFormState();
+  _SettlementBodyState createState() => _SettlementBodyState();
 }
 
-class _PaymentFormState extends State<PaymentForm> {
+class _SettlementBodyState extends State<SettlementBody> {
   int movePayment = 0;
+  // pmから全員分の名前を取得
+  List<String> name = pm.getMemberName();
+  // プルダウンメニューに初期値をセット
+  final ValueNotifier<String?> sender =
+      ValueNotifier<String?>(pm.getMemberName()[0]);
+  final ValueNotifier<String?> reciever =
+      ValueNotifier<String?>(pm.getMemberName()[0]);
 
   @override
   Widget build(BuildContext context) {
-    // pmから全員分の名前を取得
-    List<String> name = pm.getMemberName();
-    // プルダウンメニューに初期値をセット
-    final ValueNotifier<String?> sender = ValueNotifier<String?>(name[0]);
-    final ValueNotifier<String?> reciever = ValueNotifier<String?>(name[0]);
+    final Size size = MediaQuery.of(context).size;
 
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        SizedBox(
+          width: size.width * 0.9,
+          child: getFormsCard(),
+        ),
+        const SizedBox(height: 10),
+        SizedBox(
+          width: size.width * 0.9,
+          child: getTableCard(),
+        ),
+      ],
+    );
+  }
+
+  /* 精算金額などのフォーム関連 */
+  Widget getFormsCard() {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      color: Colors.white,
+      child: getPaymentForms(),
+    );
+  }
+
+  Widget getPaymentForms() {
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Column(children: [
@@ -86,6 +93,15 @@ class _PaymentFormState extends State<PaymentForm> {
         ),
         getButton(sender, reciever),
       ]),
+    );
+  }
+
+  /* 精算状況のテーブル関連 */
+  Widget getTableCard() {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      color: Colors.white,
+      child: PaymentTable(),
     );
   }
 
@@ -141,29 +157,8 @@ class _PaymentFormState extends State<PaymentForm> {
       ),
       onPressed: () {
         setState(() {
-          if (sender.value != null && reciever.value != null) {
-            pm.movePay(sender.value!, reciever.value!, movePayment);
-          }
+          pm.movePay(sender.value!, reciever.value!, movePayment);
         });
-        /*showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: Text("タイトル"),
-              content: Text("メッセージ内容"),
-              actions: [
-                TextButton(
-                  child: Text("Cancel"),
-                  onPressed: () => Navigator.pop(context),
-                ),
-                TextButton(
-                  child: Text("OK"),
-                  onPressed: () => Navigator.pop(context),
-                ),
-              ],
-            );*/
-        //},
-        //);
 
         pm.printPaymentStatus();
         print("from:" +
