@@ -57,7 +57,7 @@ class _TitleFormsState extends State<TitleForms> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       color: Colors.white,
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 20.0),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           children: [
             SizedBox(
