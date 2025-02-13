@@ -1,7 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:tatekae/IndividualPayment.dart';
-import 'package:tatekae/main.dart';
 
-class PaymentManager {
+class PaymentManager extends ChangeNotifier {
+  final MAX_MEMBER = 10;
   /* メンバ変数 */
   int _headCount = 0;
   List<IndividualPayment> _paymentStatus = [];
@@ -60,6 +61,7 @@ class PaymentManager {
     if (_headCount < MAX_MEMBER) {
       _paymentStatus.add(IndividualPayment(name, nowPay, mustPay));
       _headCount++;
+      notifyListeners();
       return true;
     } else {
       return false;
@@ -86,6 +88,7 @@ class PaymentManager {
     if (isRegistered(from) && isRegistered(to)) {
       _paymentStatus[_getIndexFromName(from)].addPayment(payment);
       _paymentStatus[_getIndexFromName(to)].subPayment(payment);
+      notifyListeners();
     }
     return;
   }
@@ -93,6 +96,7 @@ class PaymentManager {
   void clearPayment() {
     _headCount = 0;
     _paymentStatus = [];
+    notifyListeners();
   }
 
   int _getIndexFromName(String name) {
