@@ -40,6 +40,7 @@ class EntryScreen extends StatelessWidget {
               padding: const EdgeInsets.all(16.0),
               child: ElevatedButton(
                 onPressed: () {
+                  pm.initSenderReciever();
                   Navigator.pushNamed(context, '/settlement', arguments: {});
                 },
                 child: const Text('精算開始'),

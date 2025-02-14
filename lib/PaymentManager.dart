@@ -6,6 +6,7 @@ class PaymentManager extends ChangeNotifier {
   /* メンバ変数 */
   int _headCount = 0;
   List<IndividualPayment> _paymentStatus = [];
+  String _sender = '', _reciever = '';
 
   /* constructor */
   void init(int cnt, int payment) {
@@ -35,6 +36,10 @@ class PaymentManager extends ChangeNotifier {
     return ret;
   }
 
+  String getFirstMemberName() {
+    return getMemberName().first;
+  }
+
   List<IndividualPayment> getAllPaymentStatus() {
     return _paymentStatus;
   }
@@ -56,6 +61,14 @@ class PaymentManager extends ChangeNotifier {
     }
   }
 
+  String getSender() {
+    return _sender;
+  }
+
+  String getReciever() {
+    return _reciever;
+  }
+
   /* setter */
   bool addIndivisualPayment(String name, int nowPay, int mustPay) {
     if (_headCount < MAX_MEMBER) {
@@ -66,6 +79,25 @@ class PaymentManager extends ChangeNotifier {
     } else {
       return false;
     }
+  }
+
+  void setSender(String name) {
+    _sender = name;
+    notifyListeners();
+    return;
+  }
+
+  void setReciever(String name) {
+    _reciever = name;
+    notifyListeners();
+    return;
+  }
+
+  void initSenderReciever() {
+    _sender = getFirstMemberName();
+    _reciever = getFirstMemberName();
+    notifyListeners();
+    return;
   }
 
   /* others */
@@ -84,10 +116,10 @@ class PaymentManager extends ChangeNotifier {
     return;
   }
 
-  void movePay(String from, String to, int payment) {
-    if (isRegistered(from) && isRegistered(to)) {
-      _paymentStatus[_getIndexFromName(from)].addPayment(payment);
-      _paymentStatus[_getIndexFromName(to)].subPayment(payment);
+  void movePay(int payment) {
+    if (isRegistered(_sender) && isRegistered(_reciever)) {
+      _paymentStatus[_getIndexFromName(_sender)].addPayment(payment);
+      _paymentStatus[_getIndexFromName(_reciever)].subPayment(payment);
       notifyListeners();
     }
     return;

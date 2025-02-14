@@ -3,6 +3,14 @@ import 'package:flutter/services.dart';
 import 'package:tatekae/PaymentManager.dart';
 import 'package:provider/provider.dart';
 
+class SendRecvManager {
+  String user = '';
+
+  SendRecvManager(String s) {
+    user = s;
+  }
+}
+
 class SettlementScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -43,9 +51,7 @@ class SettlementBody extends StatefulWidget {
 
 class _SettlementBodyState extends State<SettlementBody> {
   int movePayment = 0;
-  // プルダウンメニューに初期値をセット
-  final ValueNotifier<String?> sender = ValueNotifier<String?>('');
-  final ValueNotifier<String?> reciever = ValueNotifier<String?>('');
+  final IS_SENDER = 0, IS_RECIEVER = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -86,12 +92,12 @@ class _SettlementBodyState extends State<SettlementBody> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            getPullDownMenu(sender, pm),
+            getPullDownMenu(IS_SENDER, pm),
             const Text('--->'),
-            getPullDownMenu(reciever, pm),
+            getPullDownMenu(IS_RECIEVER, pm),
           ],
         ),
-        getButton(sender, reciever, pm),
+        getButton(pm),
       ]),
     );
   }
@@ -118,31 +124,43 @@ class _SettlementBodyState extends State<SettlementBody> {
     );
   }
 
-  Widget getPullDownMenu(
-      ValueNotifier<String?> selectedItem, PaymentManager pm) {
+  Widget getPullDownMenu(int senderORreciever, PaymentManager pm) {
     List<String> name = pm.getMemberName();
 
-    return ValueListenableBuilder<String?>(
-      valueListenable: selectedItem,
-      builder: (context, value, child) {
-        return DropdownButton<String?>(
-          value: value,
-          onChanged: (String? newValue) {
-            selectedItem.value = newValue;
-          },
-          items: name.map<DropdownMenuItem<String>>((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value),
-            );
-          }).toList(),
-        );
-      },
-    );
+    if (senderORreciever % 2 == IS_SENDER) {
+      return DropdownButton(
+        value: pm.getSender(),
+        onChanged: (String? newValue) {
+          setState(() {
+            pm.setSender(newValue!);
+          });
+        },
+        items: name.map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        }).toList(),
+      );
+    } else {
+      return DropdownButton(
+        value: pm.getReciever(),
+        onChanged: (String? newValue) {
+          setState(() {
+            pm.setReciever(newValue!);
+          });
+        },
+        items: name.map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        }).toList(),
+      );
+    }
   }
 
-  Widget getButton(ValueNotifier<String?> sender,
-      ValueNotifier<String?> reciever, PaymentManager pm) {
+  Widget getButton(PaymentManager pm) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         backgroundColor: const Color(0xFF34495E),
@@ -150,7 +168,7 @@ class _SettlementBodyState extends State<SettlementBody> {
       ),
       onPressed: () {
         setState(() {
-          pm.movePay(sender.value!, reciever.value!, movePayment);
+          pm.movePay(movePayment);
         });
 
         pm.printPaymentStatus();
