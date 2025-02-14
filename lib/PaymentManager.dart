@@ -1,10 +1,12 @@
+import 'package:flutter/material.dart';
 import 'package:tatekae/IndividualPayment.dart';
-import 'package:tatekae/main.dart';
 
-class PaymentManager {
+class PaymentManager extends ChangeNotifier {
+  final MAX_MEMBER = 10;
   /* メンバ変数 */
   int _headCount = 0;
   List<IndividualPayment> _paymentStatus = [];
+  String _sender = '', _reciever = '';
 
   /* constructor */
   void init(int cnt, int payment) {
@@ -34,6 +36,10 @@ class PaymentManager {
     return ret;
   }
 
+  String getFirstMemberName() {
+    return getMemberName().first;
+  }
+
   List<IndividualPayment> getAllPaymentStatus() {
     return _paymentStatus;
   }
@@ -55,15 +61,43 @@ class PaymentManager {
     }
   }
 
+  String getSender() {
+    return _sender;
+  }
+
+  String getReciever() {
+    return _reciever;
+  }
+
   /* setter */
   bool addIndivisualPayment(String name, int nowPay, int mustPay) {
     if (_headCount < MAX_MEMBER) {
       _paymentStatus.add(IndividualPayment(name, nowPay, mustPay));
       _headCount++;
+      notifyListeners();
       return true;
     } else {
       return false;
     }
+  }
+
+  void setSender(String name) {
+    _sender = name;
+    notifyListeners();
+    return;
+  }
+
+  void setReciever(String name) {
+    _reciever = name;
+    notifyListeners();
+    return;
+  }
+
+  void initSenderReciever() {
+    _sender = getFirstMemberName();
+    _reciever = getFirstMemberName();
+    notifyListeners();
+    return;
   }
 
   /* others */
@@ -82,10 +116,11 @@ class PaymentManager {
     return;
   }
 
-  void movePay(String from, String to, int payment) {
-    if (isRegistered(from) && isRegistered(to)) {
-      _paymentStatus[_getIndexFromName(from)].addPayment(payment);
-      _paymentStatus[_getIndexFromName(to)].subPayment(payment);
+  void movePay(int payment) {
+    if (isRegistered(_sender) && isRegistered(_reciever)) {
+      _paymentStatus[_getIndexFromName(_sender)].addPayment(payment);
+      _paymentStatus[_getIndexFromName(_reciever)].subPayment(payment);
+      notifyListeners();
     }
     return;
   }
@@ -93,6 +128,7 @@ class PaymentManager {
   void clearPayment() {
     _headCount = 0;
     _paymentStatus = [];
+    notifyListeners();
   }
 
   int _getIndexFromName(String name) {

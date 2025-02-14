@@ -1,63 +1,58 @@
 import 'package:flutter/material.dart';
-import 'main.dart';
-import 'package:flutter/services.dart';
+import 'package:tatekae/PaymentManager.dart';
+import 'package:provider/provider.dart';
 
 class EntryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
 
-    final Map args = ModalRoute.of(context)!.settings.arguments as Map;
-    int headCount = args['headCount'];
-    int totalPayment = args['payment'];
-
-    pm.init(headCount, totalPayment);
-
-    List<Widget> paymentWidgets = getFormList(size);
-
-    return Scaffold(
-      backgroundColor: const Color(0xE9f5f5f5),
-      appBar: AppBar(
-        title: const Text(
-          'メンバーと支払額の設定',
-          style: TextStyle(color: Colors.white),
-        ),
-        backgroundColor: Colors.blueAccent,
-      ),
-      body: Column(
-        children: [
-          // ヘッダー部分
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              'メンバー情報を入力してください',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
+    return Consumer<PaymentManager>(builder: (context, pm, child) {
+      return Scaffold(
+        backgroundColor: const Color(0xE9f5f5f5),
+        appBar: AppBar(
+          title: const Text(
+            'メンバーと支払額の設定',
+            style: TextStyle(color: Colors.white),
           ),
-          // 入力フォームリスト
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                children: paymentWidgets,
+          backgroundColor: Colors.blueAccent,
+        ),
+        body: Column(
+          children: [
+            // ヘッダー部分
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                'メンバー情報を入力してください',
+                style: Theme.of(context).textTheme.titleLarge,
               ),
             ),
-          ),
-          // 精算開始ボタン
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/settlement', arguments: {});
-              },
-              child: const Text('精算開始'),
+            // 入力フォームリスト
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: getFormList(size, pm),
+                ),
+              ),
             ),
-          ),
-        ],
-      ),
-    );
+            // 精算開始ボタン
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  pm.initSenderReciever();
+                  Navigator.pushNamed(context, '/settlement', arguments: {});
+                },
+                child: const Text('精算開始'),
+              ),
+            ),
+          ],
+        ),
+      );
+    });
   }
 
-  List<Widget> getFormList(Size size) {
+  List<Widget> getFormList(Size size, PaymentManager pm) {
     List<Widget> ret = [];
     for (int i = 0; i < pm.getMemberNum(); i++) {
       ret.add(

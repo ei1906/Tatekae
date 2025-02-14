@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:tatekae/PaymentManager.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 
 class TitleScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xE9f5f5f5),
-      body: SingleChildScrollView(
-        child: TitleBody(),
-      ),
-    );
+    return Consumer<PaymentManager>(builder: (context, pm, child) {
+      return Scaffold(
+        backgroundColor: const Color(0xE9f5f5f5),
+        body: SingleChildScrollView(
+          child: TitleBody(),
+        ),
+      );
+    });
   }
 }
 
@@ -17,18 +21,20 @@ class TitleBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        SizedBox(height: size.height * 0.2),
-        //getTitleLogo(),
-        SizedBox(
-          height: size.height * 0.6,
-          child: getTitleForms(),
-        ),
-        SizedBox(height: size.height * 0.2),
-      ],
-    );
+    return Consumer<PaymentManager>(builder: (context, pm, child) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(height: size.height * 0.2),
+          //getTitleLogo(),
+          SizedBox(
+            height: size.height * 0.6,
+            child: getTitleForms(),
+          ),
+          SizedBox(height: size.height * 0.2),
+        ],
+      );
+    });
   }
 
   Widget getTitleForms() {
@@ -52,30 +58,32 @@ class _TitleFormsState extends State<TitleForms> {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    return Card(
-      elevation: 3,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      color: Colors.white,
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 20.0),
-        child: Column(
-          children: [
-            SizedBox(
-              height: size.height * 0.1,
-              child: getTitleLogo(),
-            ),
-            SizedBox(
-              height: size.height * 0.2,
-              child: getMemberSelectButton(),
-            ),
-            SizedBox(
-              height: size.height * 0.2,
-              child: getHumanIcons(),
-            ),
-          ],
+    return Consumer<PaymentManager>(builder: (context, pm, child) {
+      return Card(
+        elevation: 3,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            children: [
+              SizedBox(
+                height: size.height * 0.1,
+                child: getTitleLogo(),
+              ),
+              SizedBox(
+                height: size.height * 0.2,
+                child: getMemberSelectButton(pm),
+              ),
+              SizedBox(
+                height: size.height * 0.2,
+                child: getHumanIcons(),
+              ),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   Widget getTitleLogo() {
@@ -89,7 +97,7 @@ class _TitleFormsState extends State<TitleForms> {
     );
   }
 
-  Widget getMemberSelectButton() {
+  Widget getMemberSelectButton(PaymentManager pm) {
     return Column(
       children: [
         Row(
@@ -105,7 +113,7 @@ class _TitleFormsState extends State<TitleForms> {
           ],
         ),
         const SizedBox(height: 10),
-        getButton(),
+        getButton(pm),
       ],
     );
   }
@@ -149,20 +157,18 @@ class _TitleFormsState extends State<TitleForms> {
     );
   }
 
-  Widget getButton() {
+  Widget getButton(PaymentManager pm) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         backgroundColor: const Color(0xFF34495E), // カラーコードで色#34495Eを指定
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
       onPressed: () {
+        pm.init(headCount, payment);
         Navigator.pushNamed(
+          // entryへ移動
           context,
           '/entry',
-          arguments: {
-            "headCount": headCount,
-            "payment": payment,
-          },
         );
       },
       child: const Text(
