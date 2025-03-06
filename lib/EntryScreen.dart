@@ -93,7 +93,7 @@ class _EntryScreenState extends State<EntryScreen> {
       ),
     );
     // 立替者以外の入力フォーム
-    for (int i = 2; i <= pm.getMemberNum(); i++) {
+    for (int i = 1; i < pm.getMemberNum(); i++) {
       ret.add(
         Card(
           margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
