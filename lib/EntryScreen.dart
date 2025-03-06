@@ -58,7 +58,42 @@ class _EntryScreenState extends State<EntryScreen> {
 
   List<Widget> getFormList(Size size, PaymentManager pm) {
     List<Widget> ret = [];
-    for (int i = 0; i < pm.getMemberNum(); i++) {
+    // 立替者だけ最終支払額のフォームはなし
+    ret.add(
+      Card(
+        margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+        elevation: 4,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            //crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // 名前入力フォーム */
+              SizedBox(
+                width: size.width * 0.4,
+                child: TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: '名前',
+                  ),
+                  initialValue: pm.getAdvancePayerStatus().getName(),
+                  onChanged: (value) {
+                    pm.getAdvancePayerStatus().setName(value);
+                  },
+                ),
+              ),
+              SizedBox(width: size.width * 0.07),
+              // 最終支払額
+              SizedBox(
+                  width: size.width * 0.3,
+                  child: Text(
+                      pm.getAdvancePayerStatus().getMustPayment().toString())),
+            ],
+          ),
+        ),
+      ),
+    );
+    // 立替者以外の入力フォーム
+    for (int i = 2; i <= pm.getMemberNum(); i++) {
       ret.add(
         Card(
           margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
@@ -111,9 +146,7 @@ class _EntryScreenState extends State<EntryScreen> {
                         .getMustPayment()
                         .toString(),
                     onChanged: (value) {
-                      pm
-                          .getIndivisualPaymentStatusByIndex(i)
-                          .setMustPayment(int.parse(value));
+                      pm.entryMustPayment(i, int.parse(value));
                     },
                   ),
                 ),

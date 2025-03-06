@@ -4,7 +4,7 @@ import 'package:tatekae/IndividualPayment.dart';
 class PaymentManager extends ChangeNotifier {
   final MAX_MEMBER = 10;
   /* メンバ変数 */
-  int _headCount = 0;
+  int _headCount = 0, _paymentSum = 0;
   List<IndividualPayment> _paymentStatus = [];
   String _sender = '', _reciever = '';
 
@@ -13,6 +13,7 @@ class PaymentManager extends ChangeNotifier {
     clearPayment();
 
     _headCount = cnt;
+    _paymentSum = payment;
     // リストの先頭は立替者
     _paymentStatus.add(IndividualPayment("立替者", payment, payment));
     // 他のメンバーは 精算者A, B, ...
@@ -59,6 +60,11 @@ class PaymentManager extends ChangeNotifier {
     } else {
       return IndividualPayment('', 0, 0); // null代わり
     }
+  }
+
+  IndividualPayment getAdvancePayerStatus() {
+    // リストの先頭が立替者
+    return _paymentStatus.first;
   }
 
   String getSender() {
@@ -138,5 +144,20 @@ class PaymentManager extends ChangeNotifier {
       }
     }
     return -1;
+  }
+
+  /* Entry関連 */
+  void entryMustPayment(int index, int mustPay) {
+    // 対象のユーザを更新
+    getIndivisualPaymentStatusByIndex(index).setMustPayment(mustPay);
+    // 立替者の値を更新
+    int payerSum = 0;
+    for (int i = 1; i < _headCount; i++) {
+      // 精算者のmustPayを加算
+      payerSum += _paymentStatus[i].getMustPayment();
+    }
+    getAdvancePayerStatus().setMustPayment(_paymentSum - payerSum);
+    // notifyListeners
+    notifyListeners();
   }
 }
