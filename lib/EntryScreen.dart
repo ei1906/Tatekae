@@ -62,10 +62,11 @@ class _EntryScreenState extends State<EntryScreen> {
                               onPressed: () => Navigator.pop(context),
                             ),
                             TextButton(
-                              child: const Text("はい"),
-                              onPressed: () =>
-                                  Navigator.pushNamed(context, 'settlement'),
-                            ),
+                                child: const Text("はい"),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  Navigator.pushNamed(context, '/settlement');
+                                }),
                           ],
                         );
                       },
