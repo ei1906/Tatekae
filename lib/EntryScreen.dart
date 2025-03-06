@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:tatekae/PaymentManager.dart';
 import 'package:provider/provider.dart';
 
@@ -167,6 +168,8 @@ class _EntryScreenState extends State<EntryScreen> {
                     decoration: const InputDecoration(
                       labelText: '最終的な支払額',
                     ),
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     initialValue: pm
                         .getIndivisualPaymentStatusByIndex(i)
                         .getMustPayment()
