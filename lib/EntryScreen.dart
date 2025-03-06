@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:tatekae/PaymentManager.dart';
 import 'package:provider/provider.dart';
 
-class EntryScreen extends StatelessWidget {
+class EntryScreen extends StatefulWidget {
   @override
+  _EntryScreenState createState() => _EntryScreenState();
+}
+
+class _EntryScreenState extends State<EntryScreen> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
 
