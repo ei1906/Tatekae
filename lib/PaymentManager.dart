@@ -160,4 +160,11 @@ class PaymentManager extends ChangeNotifier {
     // notifyListeners
     notifyListeners();
   }
+
+  bool checkPlusPayment() {
+    for (int i = 0; i < _headCount; i++) {
+      if (_paymentStatus[i].getMustPayment() < 0) return false;
+    }
+    return true;
+  }
 }

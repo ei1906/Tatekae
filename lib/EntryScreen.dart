@@ -45,7 +45,32 @@ class _EntryScreenState extends State<EntryScreen> {
               child: ElevatedButton(
                 onPressed: () {
                   pm.initSenderReciever();
-                  Navigator.pushNamed(context, '/settlement', arguments: {});
+                  if (pm.checkPlusPayment()) {
+                    // 全てのmustPaymentが正なら精算画面へ
+                    Navigator.pushNamed(context, '/settlement');
+                  } else {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: const Text("確認"),
+                          content:
+                              const Text("支払額がマイナスの人がいます\nこのまま精算を行ってもよろしいですか？"),
+                          actions: [
+                            TextButton(
+                              child: const Text("いいえ"),
+                              onPressed: () => Navigator.pop(context),
+                            ),
+                            TextButton(
+                              child: const Text("はい"),
+                              onPressed: () =>
+                                  Navigator.pushNamed(context, 'settlement'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
                 },
                 child: const Text('精算開始'),
               ),
