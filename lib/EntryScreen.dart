@@ -84,9 +84,25 @@ class _EntryScreenState extends State<EntryScreen> {
               SizedBox(width: size.width * 0.07),
               // 最終支払額
               SizedBox(
-                  width: size.width * 0.3,
-                  child: Text(
-                      pm.getAdvancePayerStatus().getMustPayment().toString())),
+                width: size.width * 0.3,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      '最終的な支払額',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.black, // ラベル風の色
+                      ),
+                    ),
+                    const SizedBox(height: 4), // ラベルとの間隔を確保
+                    Text(
+                      pm.getAdvancePayerStatus().getMustPayment().toString(),
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
@@ -118,22 +134,6 @@ class _EntryScreenState extends State<EntryScreen> {
                   ),
                 ),
                 SizedBox(width: size.width * 0.07),
-                // 現在の支払額入力フォーム
-                /*    TextFormField(
-                  decoration: const InputDecoration(
-                    labelText: '現在の支払額',
-                  ),
-                  initialValue: pm
-                      .getIndivisualPaymentStatusByIndex(i)
-                      .getNowPayment()
-                      .toString(),
-                  onChanged: (value) {
-                    pm
-                        .getIndivisualPaymentStatusByIndex(i)
-                        .setNowPayment(int.parse(value));
-                  },
-                ),
-                const SizedBox(width: 3),*/
                 // 最終支払額入力フォーム
                 SizedBox(
                   width: size.width * 0.3,
