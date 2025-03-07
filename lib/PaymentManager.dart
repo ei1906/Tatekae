@@ -167,4 +167,15 @@ class PaymentManager extends ChangeNotifier {
     }
     return true;
   }
+
+  bool checkNameConflict() {
+    Map<String, bool> nt = {};
+    for (String x in getMemberName()) {
+      if (nt.containsKey(x)) {
+        return false;
+      }
+      nt[x] = true;
+    }
+    return true;
+  }
 }
