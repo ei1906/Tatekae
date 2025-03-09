@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:tatekae/PaymentManager.dart';
 import 'package:provider/provider.dart';
 
@@ -223,9 +224,12 @@ class _SettlementBodyState extends State<SettlementBody> {
     return pm.getAllPaymentStatus().map((row) {
       return DataRow(
         cells: <DataCell>[
-          DataCell(tableRowText(row.getName())),
-          DataCell(tableRowText(row.getNowPayment().toString())),
-          DataCell(tableRowText(row.getMustPayment().toString())),
+          // 現在の支払額 < 最終支払額ならフォントカラーが赤になる
+          DataCell(tableRowText(row.getName(),
+              setTextColor(row.getNowPayment(), row.getMustPayment()))),
+          DataCell(tableRowText(row.getNowPayment().toString(),
+              setTextColor(row.getNowPayment(), row.getMustPayment()))),
+          DataCell(tableRowText(row.getMustPayment().toString(), Colors.black)),
         ],
       );
     }).toList();
@@ -238,10 +242,18 @@ class _SettlementBodyState extends State<SettlementBody> {
     );
   }
 
-  Widget tableRowText(String s) {
+  Widget tableRowText(String s, Color c) {
     return Text(
       s,
-      style: const TextStyle(fontSize: 13),
+      style: TextStyle(fontSize: 13, color: c),
     );
+  }
+
+  Color setTextColor(int nowPay, int mustPay) {
+    if (nowPay < mustPay) {
+      return Colors.red;
+    } else {
+      return Colors.black;
+    }
   }
 }
