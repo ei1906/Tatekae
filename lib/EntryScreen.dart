@@ -23,10 +23,7 @@ class _EntryScreenState extends State<EntryScreen> {
       return Scaffold(
         backgroundColor: const Color(0xE9f5f5f5),
         appBar: AppBar(
-          title: const Text(
-            'メンバーと支払額の設定',
-            style: TextStyle(color: Colors.white),
-          ),
+          title: const Text(''),
           backgroundColor: Colors.blueAccent,
         ),
         body: Column(
@@ -35,7 +32,7 @@ class _EntryScreenState extends State<EntryScreen> {
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Text(
-                'メンバー情報を入力してください',
+                '【メンバー情報を入力してください】',
                 style: Theme.of(context).textTheme.titleLarge,
               ),
             ),

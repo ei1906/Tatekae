@@ -22,12 +22,7 @@ class SettlementScreen extends StatelessWidget {
         backgroundColor: const Color(0xE9f5f5f5),
         appBar: AppBar(
           backgroundColor: Colors.blueAccent,
-          title: const Text(
-            'Settlement',
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ),
+          title: const Text(''),
         ),
         body: Padding(
           padding: EdgeInsets.fromLTRB(
@@ -94,7 +89,10 @@ class _SettlementBodyState extends State<SettlementBody> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             getPullDownMenu(IS_SENDER, pm),
-            const Text('--->'),
+            const Text(
+              '  →  ',
+              style: TextStyle(fontSize: 30),
+            ),
             getPullDownMenu(IS_RECIEVER, pm),
           ],
         ),
@@ -172,7 +170,7 @@ class _SettlementBodyState extends State<SettlementBody> {
           pm.movePay(movePayment);
         });
 
-        pm.printPaymentStatus();
+        // pm.printPaymentStatus();
       },
       child: const Text(
         "精算",
